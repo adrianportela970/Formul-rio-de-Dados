@@ -1,15 +1,35 @@
-const script_do_google = 'https://script.google.com/macros/s/AKfycbwp1RzF_uM-XWQ8OXo1xntai9P4T4yI_U2pyEEXUWuKsy6vdT901PWedIaKxOp5bc2P/exec';
+const script_do_google = 'https://script.google.com/macros/s/AKfycbxEWGy159SlLV40t0ByuLuYbxCBtk9t8Tgj5EEunntLtGYW7_DPerXSeLDmR3k-nTmO/exec';
 const dados_do_formulario = document.forms['formulario-contato'];
 
-dados_do_formulario.addEventListener('submit', function (e){
-    e.preventDefault();
+function enviarDados(event) {
+    // Previne o envio padrão do formulário
+    event.preventDefault();
 
-    fetch(script_do_google,{ method: 'POST', body: new FormData(dados_do_formulario)})
-    .then(response => {
-        alert('Dados enviados com sucesso!', response);
-        dados_do_formulario.reset();
+    // Envia os dados para o script do Google usando fetch
+    fetch(script_do_google, {
+        method: 'POST',
+        body: new FormData(dados_do_formulario) // Coleta os dados do formulário
     })
-    .catch(error =>
-        console.error('Erro no envio dos dados!', error)
-    )
-})
+    .then(response => {
+        // Garante que a resposta é tratada corretamente
+        if (!response.ok) {
+            throw new Error(`Erro HTTP! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Verifica o status enviado pelo Apps Script
+        if (data.status === 'sucesso') {
+            alert(data.mensagem); // Exibe mensagem de sucesso
+            dados_do_formulario.reset(); // Limpa o formulário
+        } else {
+            alert('Erro: ' + data.mensagem); // Exibe mensagem de erro
+        }
+    })
+    .catch(error => {
+        // Exibe erro no console
+        console.error('Erro no envio dos dados!', error);
+    });
+}
+
+console.log('Script conectado ao index.html com sucesso!');
