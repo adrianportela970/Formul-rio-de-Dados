@@ -13,7 +13,7 @@ body{
     justify-content: center;
 }
 
-.container{
+div{
     width: 500px;
     padding: 30px;
     border: 1px solid #eeeeee;
@@ -39,7 +39,7 @@ textarea{
     padding: 10px;
 }
 
-#enviar{
+.enviar{
     border: none;
     background-color: yellow;
     color: black;
@@ -48,6 +48,6 @@ textarea{
     border-radius: 5px;
 }
 
-#enviar:hover{
+.enviar:hover{
     background-color: #333333;
 }
