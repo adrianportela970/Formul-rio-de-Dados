@@ -6,7 +6,7 @@ function enviarDados(event) {
     event.preventDefault();
 
     // Envia os dados para o script do Google usando fetch
-    fetch(script_do_google, {
+    fetch(script_do_google, { mode: 'no-cors',
         method: 'POST',
         body: new FormData(dados_do_formulario) // Coleta os dados do formulário
     })
