@@ -1,23 +1,204 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Solicitação de Conserto de Celular</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .question-group {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-group label {
+            display: block;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .enviar {
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .enviar:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
+
 <body>
-    <div>
-        <form method="post" action="" name="formulario-contato" onsubmit="enviarDados(event)">
-            <h4>Fale Conosco</h4>
-            <input type="text" name="nome" placeholder="Nome">
-            <input type="email" name="email" placeholder="Email">
-            <textarea name="mensagem" rows="7" placeholder="Sua mensagem"></textarea>
-            <input class="enviar" type="submit" value="Enviar" id="Enviar">
+
+    <div class="form-container">
+        <h4>Solicitação de Conserto de Celular</h4>
+        <form onsubmit="enviarDados(event)">
+
+            <div class="question-group">
+                <label>Nome:</label>
+                <input type="text" name="nome" placeholder="Ex: João Silva Oliveira" required>
+            </div>
+
+            <div class="question-group">
+                <label>Email:</label>
+                <input type="email" name="email" placeholder="Ex: example@gmail.com" required>
+            </div>
+
+            <div class="question-group">
+                <label>Selecione a marca do celular:</label>
+                <select name="marca" required>
+                    <option value="">Selecione a marca</option>
+                    <option value="Apple">Apple</option>
+                    <option value="Samsung">Samsung</option>
+                    <option value="Xiaomi">Xiaomi</option>
+                    <option value="Motorola">Motorola</option>
+                    <option value="Outra">Outra</option>
+                </select>
+            </div>
+
+            <div class="question-group">
+                <label>Modelo do celular:</label>
+                <input type="text" name="modelo" placeholder="Ex: iPhone 13, Galaxy S22, Xiaomi Redmi Note 10" required>
+            </div>
+
+            <div class="question-group">
+                <label>Qual serviço você precisa?</label>
+                <input type="text" name="servico"
+                    placeholder="Ex: Troca de tela, conserto de bateria, problema na câmera" required>
+            </div>
+
+            <div class="question-group">
+                <label>Você mora em Ribeirão Preto?</label>
+                <select name="ribeirao_preto" required>
+                    <option value="">Selecione uma opção</option>
+                    <option value="Sim">Sim</option>
+                    <option value="Não">Não</option>
+                </select>
+            </div>
+
+            <div class="question-group">
+                <label>Telefone para contato:</label>
+                <input type="tel" id="telefone" name="telefone" placeholder="Ex: (16) 91234-5678" required>
+            </div>
+
+            <div class="question-group">
+                <label>Informações adicionais:</label>
+                <textarea name="mensagem" rows="5" placeholder="Descreva mais detalhes sobre o problema..."></textarea>
+            </div>
+
+            <button class="enviar" type="submit">Enviar</button>
         </form>
     </div>
 
-   <script src="script.js"></script>
-    
+    <script>
+        const script_do_google = 'https://script.google.com/macros/s/AKfycbyC2ECBNtwmGBzvguUGW7BwdjDgXIaoIAugMW-yGV6T48hA8vVPENDzv2Tm0p0FesNmAA/exec';
+
+        function enviarDados(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+            // Verificar quais dados estão sendo enviados
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
+            fetch(script_do_google, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'sucesso') {
+                        alert("Dados enviados com sucesso!");
+                        event.target.reset();
+                    } else {
+                        alert('Erro: ' + data.mensagem);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro no envio dos dados!', error);
+                    alert('Falha no envio. Tente novamente.');
+                });
+        }
+
+
+        document.getElementById("telefone").addEventListener("input", function (event) {
+            let telefone = event.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+            if (telefone.length <= 10) {
+                telefone = telefone.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+            } else {
+                telefone = telefone.replace(/^(\d{2})(\d{5})(\d{0,4})$/, "($1) $2-$3");
+            }
+
+            event.target.value = telefone;
+        });
+    </script>
+
 </body>
+
 </html>
